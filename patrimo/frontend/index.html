@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Pátrimo — Visor IFC</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a0f; color:#dde0e8; font-family:monospace;
+         display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+  header { height:48px; background:#0f1013; border-bottom:1px solid #1e2430;
+           display:flex; align-items:center; padding:0 20px; font-size:16px;
+           font-weight:bold; color:#e8c96a; flex-shrink:0; }
+  .main { display:flex; flex:1; overflow:hidden; }
+  #canvas { flex:1; display:block; }
+  .sidebar { width:280px; background:#0f1013; border-left:1px solid #1e2430;
+             display:flex; flex-direction:column; overflow-y:auto; flex-shrink:0; }
+  .panel { padding:14px; border-bottom:1px solid #1e2430; }
+  .panel h3 { font-size:9px; letter-spacing:.16em; color:#52586a;
+              text-transform:uppercase; margin-bottom:10px; }
+  .kv { display:flex; justify-content:space-between; padding:5px 0;
+        font-size:11px; border-bottom:1px solid rgba(255,255,255,.03); }
+  .kv:last-child { border:none; }
+  .k { color:#7a8299; }
+  .v { font-weight:500; }
+  .v.g { color:#3dd9c0; }
+  .v.y { color:#e8c96a; }
+  .loading { color:#52586a; font-size:11px; }
+  .error   { color:#e85c5c; font-size:11px; }
+  .muted   { color:#52586a; font-size:11px; }
+  #status  { font-size:9px; color:#52586a; padding:6px 14px;
+             background:#0f1013; border-top:1px solid #1e2430; flex-shrink:0; }
+  input[type=file] { display:none; }
+  .btn { padding:6px 14px; background:#1c1f26; border:1px solid #252830;
+         color:#dde0e8; font-family:monospace; font-size:10px; cursor:pointer;
+         border-radius:3px; margin:8px 14px; display:inline-block; }
+  .btn:hover { border-color:#e8c96a; color:#e8c96a; }
+</style>
+</head>
+<body>
+
+<header>Pátrimo — Visor IFC</header>
+
+<div class="main">
+  <canvas id="canvas"></canvas>
+
+  <div class="sidebar">
+    <label class="btn" for="ifc-input">📂 Cargar IFC</label>
+    <input type="file" id="ifc-input" accept=".ifc">
+
+    <div class="panel">
+      <h3>Elemento seleccionado</h3>
+      <div id="panel-propiedades">
+        <div class="muted">Click en un elemento del modelo</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3>Datos financieros</h3>
+      <div id="panel-financiero">
+        <div class="muted">Seleccioná un elemento</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="status">Sin modelo cargado</div>
+
+<script type="module">
+  import { cargarIFC } from './viewer.js';
+
+  document.getElementById('ifc-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    await cargarIFC(url);
+  });
+</script>
+</body>
+</html>
